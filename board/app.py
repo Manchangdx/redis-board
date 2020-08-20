@@ -27,10 +27,16 @@ def create_app():
 
     # 注册 Blueprint
     app.register_blueprint(api)
-    # 初始化数据库
+
+    # 在应用初始化的时候，app 设置了一个 extensions 属性，属性值是空字典
+    # 下面这步操作的结果之一是向 app.extensions 里添加一组键值对
+    # 键是 'sqlalchemy' ，值是 flask_sqlalchemy.__init__._SQLAlchemyState 类的实例
+    # 该实例的 db 属性值就是这个 db ，connectors 属性值是空字典
     db.init_app(app)
+
     # 如果是开发环境则创建所有数据库表
     if app.debug:
         with app.app_context():
             db.create_all()
+
     return app

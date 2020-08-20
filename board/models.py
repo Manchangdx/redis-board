@@ -1,8 +1,12 @@
 """映射类文件
 """
 
+from redis import StrictRedis, RedisError
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+
+from board.common.rest import RestException
+
 
 db = SQLAlchemy()
 
@@ -23,6 +27,27 @@ class Server(db.Model):
     password = db.Column(db.String())
     updated_at = db.Column(db.DateTime, default=datetime.utcnow)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    @property
+    def redis(self):
+        return StrictRedis(self.host, self.port, password=self.password)
+
+    def ping(self):
+        """测试 Redis 服务器能否正常连接，返回值是布尔值"""
+        try:
+            return self.redis.ping()
+        except RedisError:
+            raise RestException(400, 
+                    f"Redis server {self.host} can't be connected.")
+
+    def get_metrics(self):
+        """获取 Redis 服务器监控信息，返回值是字典"""
+        try:
+            return self.redis.info()
+        except RedisError:
+            raise RestException(400, 
+                    f"Redis server {self.host} can't be connected.")
+
 
     def save(self):
         """保存到数据库中
