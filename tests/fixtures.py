@@ -6,14 +6,16 @@ from board.models import db as database, Server
 
 @pytest.fixture
 def app():
-    """应用对象"""
+    """应用对象
+    """
 
     return create_app()
 
 
 @pytest.yield_fixture
 def db(app):
-    """数据库"""
+    """数据库
+    """
 
     with app.app_context():
         # 创建全部数据表
@@ -26,9 +28,20 @@ def db(app):
 
 @pytest.fixture
 def server(db):
-    """Redis 服务器"""
+    """Redis 服务器
+    """
     
     server = Server(name='redis_test', description='This is a test server.',
              host='127.0.0.1', port=6379)
     server.save()
     return server
+
+
+@pytest.yield_fixture
+def client(app):
+    """创建客户端，相当于浏览器
+    """
+
+    # 这里使用 with 关键字是为了保证测试结束后清除 client
+    with app.test_client() as client:
+        yield client

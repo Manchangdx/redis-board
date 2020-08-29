@@ -22,9 +22,7 @@ class TestServer:
         assert server.ping() is True
 
     def test_ping_failed(self, db):
-        # 没有 Redis 服务器监听在 127.0.0.1:6399 地址, 所以将访问失败
         server = Server(name='test', host='127.0.0.1', port=6399)
-
         try:
             server.ping()
         except RestException as e:
