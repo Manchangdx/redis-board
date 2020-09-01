@@ -1,16 +1,12 @@
-"""映射类文件
+"""该模块用于实现 Redis 服务器映射类及其相应的序列化类
 """
 
 from redis import StrictRedis, RedisError
-from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
 from marshmallow import Schema, fields, validate, post_load
 from marshmallow import validates_schema, ValidationError
 
-from board.common.rest import RestException
-
-
-db = SQLAlchemy()
+from .base import db, BaseModel
+from ..common.errors import RestError
 
 
 # 该类的实例即为连接 Redis 服务器的客户端对象
@@ -21,7 +17,6 @@ class Server(db.Model):
     __tablename__ = 'redis_server'
 
     id = db.Column(db.Integer, primary_key=True)
-    # unique = True 不能有同名的服务器
     name = db.Column(db.String(64), unique=True)
     description = db.Column(db.String(512))
     host = db.Column(db.String(15))
@@ -49,22 +44,6 @@ class Server(db.Model):
         except RedisError:
             raise RestException(400, 
                     f"Redis server {self.host} can't be connected.")
-
-
-    def save(self):
-        """保存到数据库中
-        """
-        db.session.add(self)
-        db.session.commit()
-
-    def delete(self):
-        """从数据库中删除
-        """
-        db.session.delete(self)
-        db.session.commit()
-
-    def __repr__(self):
-        return f'<Server(name={self.name})>' 
 
 
 # marshmallow 是用来实现复杂的 ORM 对象与 Python 原生数据类型相互转换的库
