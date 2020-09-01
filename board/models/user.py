@@ -117,8 +117,7 @@ class User(BaseModel):
         if payload['refresh_exp'] < timegm(datetime.utcnow().utctimetuple()):
             raise InvalidTokenError(403, 'Invalid token.')
         # 经过上面的层层检查后
-        user = cls.query.get(payload['uid'])
-        if not user:
+        if not (user := cls.query.get(payload['uid'])):
             raise InvalidTokenError(403, 'User not exists.')
         return user
 
@@ -130,11 +129,10 @@ class User(BaseModel):
             name (str): 管理员账号名字
             password (str): 管理员账号密码
         '''
-        name = 'admin'
-        admin = cls.query.filter_by(name=name).first()
-        if admin:
-            return name, ''
+        name = 'Admin'
         password = '123456'
+        if (admin := cls.query.filter_by(name=name).first()):
+            return name, password
         email = 'admin@haha.com'
         admin = cls(name=name, email=email, is_admin=True)
         admin.password = password

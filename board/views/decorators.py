@@ -1,7 +1,7 @@
 from functools import wraps
 from flask import g, request
 
-from ..common.errors import RestError, AuthorizationError
+from ..common.errors import RestError, AuthenticationError
 from ..models import User
 
 

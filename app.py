@@ -4,7 +4,7 @@
 import urllib
 
 from board.app import create_app
-from board.models import db
+from board.models import db, User
 
 
 app = create_app()
@@ -16,3 +16,5 @@ def init_db():
     """
     db.create_all()
     print(f"Sqlite3 database file is {app.config['SQLALCHEMY_DATABASE_URI']}.")
+    name, password = User.create_administrator()
+    print(f'Create admin user, name: {name}, password: {password}.')

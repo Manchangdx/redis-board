@@ -10,7 +10,7 @@ from ..common.errors import RestError
 
 
 # 该类的实例即为连接 Redis 服务器的客户端对象
-class Server(db.Model):
+class Server(BaseModel):
     """Redis 客户端模型
     """
 
@@ -22,8 +22,6 @@ class Server(db.Model):
     host = db.Column(db.String(15))
     port = db.Column(db.Integer, default=6379)
     password = db.Column(db.String())
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     @property
     def redis(self):

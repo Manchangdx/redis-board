@@ -1,8 +1,8 @@
 from flask import request, g
 
-from board.common.rest import RestView
-from board.models import Server, ServerSchema
-from board.common.decorators import ObjectMustExists
+from ..common.rest import RestView
+from ..models import Server, ServerSchema
+from .decorators import ObjectMustExists, TokenAuthenticate
 
 
 class ServerListView(RestView):
@@ -23,6 +23,8 @@ class ServerListView(RestView):
         """
         # data 是字典对象，保存着由客户端发来的数据
         data = request.get_json()
+        host = data['host']
+        data['host'] = '127.0.0.1' if host == 'localhost' else host
         server, errors = ServerSchema().load(data)
         if errors:
             return errors, 400
