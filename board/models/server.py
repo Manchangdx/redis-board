@@ -32,15 +32,15 @@ class Server(BaseModel):
         try:
             return self.redis.ping()
         except RedisError:
-            raise RestException(400, 
-                    f"Redis server {self.host} can't be connected.")
+            msg = f'Redis server {self.host} can\'t be connected.'
+            raise RestError(400, msg)
 
     def get_metrics(self):
         """获取 Redis 服务器监控信息，返回值是字典"""
         try:
             return self.redis.info()
         except RedisError:
-            raise RestException(400, 
+            raise RestError(400, 
                     f"Redis server {self.host} can't be connected.")
 
 

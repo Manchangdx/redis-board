@@ -1,5 +1,5 @@
-'''该模块实现用户管理视图
-'''
+"""该模块实现用户管理视图
+"""
 
 from flask import request, g
 
@@ -13,19 +13,19 @@ from .decorators import ObjectMustExists, TokenAuthenticate
 
 
 class UserListView(RestView):
-    '''该视图类用于获取用户列表和创建新用户，只有管理员用户才有相关权限
-    '''
+    """该视图类用于获取用户列表和创建新用户，只有管理员用户才有相关权限
+    """
 
     method_decorators = (TokenAuthenticate(admin=True), )
 
     def get(self):
-        '''获取用户列表'''
+        """获取用户列表"""
 
         users = User.query.all()
         return UserSchema().dump(users, many=True).data
 
     def post(self):
-        '''创建新用户'''
+        """创建新用户"""
         
         data = request.get_json()
         user, errors = UserSchema().load(data)
@@ -36,19 +36,19 @@ class UserListView(RestView):
 
 
 class UserDetailView(RestView):
-    '''该视图类用于对某个用户进行查询、更新和删除操作
-    '''
+    """该视图类用于对某个用户进行查询、更新和删除操作
+    """
 
     method_decorators = (TokenAuthenticate(admin=True), ObjectMustExists(User))
 
     def get(self, object_id):
-        '''获取用户信息'''
+        """获取用户信息"""
 
         data, _ = UserSchema().dump(g.instance)
         return data
 
     def put(self, object_id):
-        '''更新用户信息'''
+        """更新用户信息"""
         
         schema = UserSchema(context={'instance': g.instance})
         data = request.get_json()

@@ -11,8 +11,8 @@ class BaseModel(db.Model):
 
     __abstract__ = True
 
-    created_time = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_time = db.Column(db.DateTime, default=datetime.utcnow)
+    created_time = db.Column(db.DateTime, default=datetime.now)
+    updated_time = db.Column(db.DateTime, default=datetime.now)
 
     def save(self):
         """将实例保存到数据库

@@ -17,9 +17,9 @@ class ObjectMustExists:
         def wrapper(*args, **kw):
             object_id = kw.get('object_id')
             if object_id is None:
-                raise RestException(404, 'Object not exists.')
+                raise RestError(404, 'Object not exists.')
             if (obj := self.server_class.query.get(object_id)) is None:
-                raise RestException(404, 'Object not exists.')
+                raise RestError(404, 'Object not exists.')
             g.instance = obj
             return func(*args, **kw)
         return wrapper

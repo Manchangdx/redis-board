@@ -62,6 +62,7 @@ class RestView(MethodView):
             # ServerDetailView.put 的返回值是 Server 实例
             # ServerDetailView.delete 的返回值是元组，等等...
             resp = method(*args, **kwargs)
+        # RestError 是一众自定义异常类的父类
         except RestError as e:
             resp = self.handle_error(e)
 

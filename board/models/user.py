@@ -11,8 +11,8 @@ from ..common.errors import InvalidTokenError, AuthenticationError
 
 
 class User(BaseModel):
-    '''用户映射类
-    '''
+    """用户映射类
+    """
 
     id = db.Column(db.Integer, primary_key=True)
     wx_id = db.Column(db.String(16), unique=True)
@@ -35,7 +35,7 @@ class User(BaseModel):
 
     @classmethod
     def authenticate(cls, identifier, pwd):
-        '''根据用户名或邮箱认证用户并检查密码是否正确
+        """根据用户名或邮箱认证用户并检查密码是否正确
 
         Args:
             identifier (str): 用户名或邮箱
@@ -43,27 +43,29 @@ class User(BaseModel):
 
         Return:
             object: User 实例
-        '''
-        user = cls.query.filter(db.or_(cls.name==identifier,
-                cls.email==identifier)).first()
+        """
+        user = cls.query.filter(
+                db.or_(cls.name==identifier, cls.email==identifier)
+        ).first()
         if not user or not user.verify_password(pwd):
             raise AuthenticationError(403, 'Authenticate failed.')
         return user
 
     @classmethod
     def wx_id_user(cls, wx_id):
-        '''根据 wx_id 获取用户对象'''
+        """根据 wx_id 获取用户对象
+        """
         return cls.query.filter_by(wx_id=wx_id).first()
 
     def generate_token(self):
-        '''生成 JSON WEB TOKEN
+        """生成 JSON WEB TOKEN
 
         首先创建载荷字典对象，其中包括用户ID、管理员判断、过期时间、刷新时间
         然后将载荷字典作为参数调用 jwt.encode 方法生成 token
         生成的 token 是二进制字符串，将其转换成 ASCII 字符串并返回
-        '''
+        """
         # 设置 token 的过期时间为 1 天
-        exp = datetime.utcnow() + timedelta(days=1)
+        exp = datetime.now() + timedelta(days=1)
         # token 过期后 10 分钟内，可以刷新旧的 token 获取新 token
         # datetime.datetime 对象的 utctimetuple 方法的返回值
         # 是 time.struct_time 对象，该对象为类 tuple 对象
@@ -85,7 +87,7 @@ class User(BaseModel):
 
     @classmethod
     def verify_token(cls, token, verify_exp=True):
-        '''客户端向服务器发送请求时，验证 token
+        """客户端向服务器发送请求时，验证 token
 
         Args:
             token (str): JSON WEB TOKEN
@@ -93,7 +95,7 @@ class User(BaseModel):
 
         Return:
             object: 返回用户对象（User 类实例）
-        '''
+        """
         # verify_exp 的值如果为 False ，则不验证 token 的过期时间
         # 也就是说即使 token 过期也没关系，还是可以得到 payload
         # 如果 verify_exp 等于 True ，则验证 token 的过期时间
@@ -114,7 +116,7 @@ class User(BaseModel):
         if not all(conditions):
             raise InvalidTokenError(403, 'Invalid token.')
         # 检查是否过了允许刷新的时间，刷新时间是 token 过期后 10 分钟内
-        if payload['refresh_exp'] < timegm(datetime.utcnow().utctimetuple()):
+        if payload['refresh_exp'] < timegm(datetime.now().utctimetuple()):
             raise InvalidTokenError(403, 'Invalid token.')
         # 经过上面的层层检查后
         if not (user := cls.query.get(payload['uid'])):
@@ -123,12 +125,12 @@ class User(BaseModel):
 
     @classmethod
     def create_administrator(cls):
-        '''创建管理员账号
+        """创建管理员账号
 
         Return:
             name (str): 管理员账号名字
             password (str): 管理员账号密码
-        '''
+        """
         name = 'Admin'
         password = '123456'
         if (admin := cls.query.filter_by(name=name).first()):
@@ -146,8 +148,8 @@ class User(BaseModel):
 # User 实例转换为字典或 JSON 字符串的过程叫做序列化，反之叫做反序列化
 # 序列化和反序列化需要对某些字段进行验证，使用 marshmallow 可以很好地实现需求
 class UserSchema(Schema):
-    '''User 实例序列化类
-    '''
+    """User 实例序列化类
+    """
 
     id = fields.Integer(dump_only=True)
     wx_id = fields.String(dump_only=True)

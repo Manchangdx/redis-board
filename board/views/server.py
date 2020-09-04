@@ -9,6 +9,8 @@ class ServerListView(RestView):
     """该视图类用于查询全部 Redis 服务器和添加新的 Redis 服务器
     """
 
+    method_decorators = (TokenAuthenticate(admin=True), )
+
     def get(self):
         """获取 Redis 列表
         """
@@ -38,7 +40,7 @@ class ServerDetailView(RestView):
     """该视图类用于对某个服务器进行查询、更新和删除操作
     """
     
-    method_decorators = [ObjectMustExists(Server)]
+    method_decorators = (TokenAuthenticate(), ObjectMustExists(Server))
 
     def get(self, object_id):
         """获取服务器详情
@@ -67,14 +69,14 @@ class ServerDetailView(RestView):
         if errors:
             return errors, 400
         server.save()
-        return {'ok', True}
+        return {'ok': True}
 
     def delete(self, object_id):
         """删除服务器
         """
         g.instance.delete()
         # 状态码 204 的意思是请求执行成功，但不跳转到新页面，也不刷新当前页面
-        return {'ok', True}, 204
+        return {'ok': True}, 204
 
 
 class ServerMetricsView(RestView):
