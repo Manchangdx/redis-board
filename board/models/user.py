@@ -52,7 +52,7 @@ class User(BaseModel):
         return user
 
     @classmethod
-    def wx_id_user(cls, wx_id):
+    def get_user_via_wx_id(cls, wx_id):
         """根据 wx_id 获取用户对象
         """
         return cls.query.filter_by(wx_id=wx_id).first()

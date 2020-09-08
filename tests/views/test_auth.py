@@ -1,5 +1,5 @@
-'''用户登录认证功能测试
-'''
+"""用户登录认证功能测试
+"""
 
 import json
 from flask import url_for
@@ -9,13 +9,13 @@ from tests.fixtures import PASSWORD
 
 
 class TestAuth:
-    '''测试用户登录
-    '''
+    """测试用户登录
+    """
 
     endpoint = 'api.login'
 
     def test_admin_login_success(self, client, admin):
-        '''测试管理员用户登录成功'''
+        """测试管理员用户登录成功"""
 
         data = {'name': admin.name, 'password': PASSWORD}
         resp = client.post(url_for(self.endpoint), data=json.dumps(data),
@@ -26,7 +26,7 @@ class TestAuth:
         assert admin == resp_user   
 
     def test_normal_user_login_success(self, client, user):
-        '''测试普通用户登录成功'''
+        """测试普通用户登录成功"""
 
         data = {'name': user.name, 'password': PASSWORD}
         resp = client.post(url_for(self.endpoint), data=json.dumps(data),
@@ -37,7 +37,7 @@ class TestAuth:
         assert user == resp_user
 
     def test_login_fail_with_no_password(self, client, user):
-        '''测试未提供密码导致登录失败'''
+        """测试未提供密码导致登录失败"""
 
         data = {'name': user.name}
         resp = client.post(url_for(self.endpoint), data=json.dumps(data),
@@ -47,7 +47,7 @@ class TestAuth:
                 'ok': False}
 
     def test_login_fail_with_wrong_password(self, client, user):
-        '''测试密码错误导致登录失败'''
+        """测试密码错误导致登录失败"""
         
         wrong_password = 'haha'
         data = {'name': user.name, 'password': wrong_password}

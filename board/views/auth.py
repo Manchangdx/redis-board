@@ -1,5 +1,5 @@
-'''该模块实现用户登录视图
-'''
+"""该模块实现用户登录视图
+"""
 
 from datetime import datetime
 from flask import request
@@ -10,14 +10,14 @@ from ..common.rest import RestView
 
 
 class AuthView(RestView):
-    '''用户登录视图控制器类
-    '''
+    """用户登录视图控制器类
+    """
 
     # 应用程序启动后，前端代码会自动提供一个带有登录表单的页面
     # 填写表单并点击提交后，服务器收到请求，交由下面的方法处理
     def post(self):
-        '''此方法用于用户登录，登录成功后返回用于后续认证的 token
-        '''
+        """此方法用于用户登录，登录成功后返回用于后续认证的 token
+        """
 
         data = request.get_json()
         if not data:

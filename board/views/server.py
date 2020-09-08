@@ -80,8 +80,8 @@ class ServerDetailView(RestView):
 
 
 class ServerMetricsView(RestView):
-    '''获取 Redis 服务器监控信息
-    '''
+    """获取 Redis 服务器监控信息
+    """
 
     # 注意针对某个 Server 实例的请求须使用 ObjectMustBeExist 实例装饰器处理
     method_decorators = [TokenAuthenticate(), ObjectMustExists(Server)]

@@ -3,8 +3,8 @@ from board.common.errors import RestError
 
 
 class TestServer:
-    '''测试 Server 映射类相关功能
-    '''
+    """测试 Server 映射类相关功能
+    """
 
     # 此方法内部未直接用到 db ，但运行代码时要连接数据库
     # 所以必须提供 db 参数，也就是调用 fixtures 里的 db 函数
@@ -33,5 +33,5 @@ class TestServer:
             server.ping()
         except RestError as e:
             assert e.code == 400
-            message = 'Redis server {} can\'t be connected.'.format(server.host)
+            message = f'Redis server {server.host} can\'t be connected.'
             assert e.message == message

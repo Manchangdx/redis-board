@@ -43,6 +43,18 @@ class Server(BaseModel):
             raise RestError(400, 
                     f"Redis server {self.host} can't be connected.")
 
+    @property
+    def status(self):
+        """服务器当前状态
+        """
+        status = 'error'
+        try:
+            if self.ping():
+                status = 'ok'
+        except RedisConnectError:
+            pass
+        return status
+
 
 # marshmallow 是用来实现复杂的 ORM 对象与 Python 原生数据类型相互转换的库
 # 例如 Server 映射类实例与 JSON 对象相互转换

@@ -7,6 +7,7 @@ from .index import IndexView
 from .auth import AuthView
 from .server import ServerListView, ServerDetailView, ServerMetricsView
 from .user import UserListView, UserDetailView
+from .wx import WxView, WxBindView
 
 # 创建 API 蓝图
 api = Blueprint('api', __name__)
@@ -47,3 +48,7 @@ api.add_url_rule('/servers/<int:object_id>/metrics',
 api.add_url_rule('/users/', view_func=UserListView.as_view('user_list'))
 api.add_url_rule('/users/<int:object_id>',
         view_func=UserDetailView.as_view('user_detail'))
+
+# 微信接口
+api.add_url_rule('/wx', view_func=WxView.as_view('wx_view'))
+api.add_url_rule('/wx/bind/<wx_id>', view_func=WxBindView.as_view('wx_bind'))

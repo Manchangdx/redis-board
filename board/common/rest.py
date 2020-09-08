@@ -11,8 +11,8 @@ from .errors import RestError
 # 所有的 API 都将基于这个 RestView 类实现
 # 当客户端发送请求到服务器，会调用此类中的方法
 class RestView(MethodView):
-    '''自定义视图类的基类
-    '''
+    """自定义视图类的基类
+    """
 
     content_type = 'application/json; charset=utf-8'
     method_decorators = []
@@ -38,8 +38,7 @@ class RestView(MethodView):
             method = getattr(self, 'get', None)
 
         # 断言 method 不是 None，逗号后面是断言失败的提示信息
-        assert method is not None, 'Unimplemented method {}'.format(
-                request.method)
+        assert method is not None, f'Unimplemented method {request.method}'
 
         # 以下几行代码用于处理装饰器
         # 针对某个 Server 对象的删改查操作，会为对应的方法添加装饰器

@@ -26,8 +26,8 @@ class ObjectMustExists:
 
 
 class TokenAuthenticate:
-    '''该装饰器用于用户登录时验证 HTTP Authorization 头所包含的 token
-    '''
+    """该装饰器用于用户登录时验证 HTTP Authorization 头所包含的 token
+    """
 
     # admin 参数决定是否验证管理员权限
     def __init__(self, admin=False):
@@ -36,10 +36,8 @@ class TokenAuthenticate:
     def __call__(self, func):
         @wraps(func)
         def wrapper(*args, **kw):
-            # TODO 海象
             # 获取请求对象的头部字段信息
-            pack = request.headers.get('Authorization', None)
-            if not pack:
+            if not (pack := request.headers.get('Authorization', None)):
                 raise AuthenticationError(401, 'Token not found.')
             # pack 须为 'jwt <token_value>' 这种形式，由空格分开两部分
             parts = pack.split()

@@ -6,13 +6,13 @@ from tests.base import TokenHeaderMixin
 
 
 class TestServerListView(TokenHeaderMixin):
-    '''测试查询 Redis 服务器列表和新增 Redis 服务器的 API
-    '''
+    """测试查询 Redis 服务器列表和新增 Redis 服务器的 API
+    """
 
     endpoint = 'api.server_list'
 
     def test_get_servers(self, server, client, admin):
-        '''获取 Redis 服务器列表'''
+        """获取 Redis 服务器列表"""
         
         # 客户端向服务器发送 GET 请求
         resp = client.get(url_for(self.endpoint), 
@@ -37,7 +37,7 @@ class TestServerListView(TokenHeaderMixin):
         assert h['port'] == server.port
 
     def test_create_server_success(self, db, client, admin):
-        '''测试创建 Redis 服务器成功'''
+        """测试创建 Redis 服务器成功"""
 
         assert Server.query.count() == 0
 
@@ -63,7 +63,7 @@ class TestServerListView(TokenHeaderMixin):
             assert getattr(server, key) == value
 
     def test_create_redis_server_fail(self, db, client, admin):
-        '''测试创建 Redis 服务器失败'''
+        """测试创建 Redis 服务器失败"""
 
         data = {
             'name': 'test',
@@ -81,7 +81,7 @@ class TestServerListView(TokenHeaderMixin):
         assert d['message'] == 'String does not match expected pattern.'
 
     def test_create_duplicate_redis_server_fail(self, server, client, admin):
-        '''测试创建重复的 Redis 服务器失败'''
+        """测试创建重复的 Redis 服务器失败"""
         
         data = {
             'name': server.name,
@@ -98,13 +98,13 @@ class TestServerListView(TokenHeaderMixin):
 
 
 class TestServerDetailView(TokenHeaderMixin):
-    '''测试查询、修改和删除某个 Redis 服务器的 API
-    '''
+    """测试查询、修改和删除某个 Redis 服务器的 API
+    """
 
     endpoint = 'api.server_detail'
 
     def test_get_server_success(self, server, client, admin):
-        '''测试查询某个 Redis 服务器详情成功'''
+        """测试查询某个 Redis 服务器详情成功"""
         url = url_for(self.endpoint, object_id=server.id)
         resp = client.get(url, headers=self.token_header(admin))
         assert resp.status_code == 200
@@ -117,7 +117,7 @@ class TestServerDetailView(TokenHeaderMixin):
                     assert getattr(server, key) == value
 
     def test_get_server_fail(self, server, client, admin):
-        '''测试查询某个 Redis 服务器详情失败'''
+        """测试查询某个 Redis 服务器详情失败"""
         not_exist_id = 123
         url = url_for(self.endpoint, object_id=not_exist_id)
         resp = client.get(url, headers=self.token_header(admin))
@@ -125,7 +125,7 @@ class TestServerDetailView(TokenHeaderMixin):
         assert resp.json == {'ok': False, 'message': 'Object not exists.'}
 
     def test_update_server_success(self, server, client, admin):
-        '''测试更新某个 Redis 服务器成功'''
+        """测试更新某个 Redis 服务器成功"""
         # data 就是要更新的字段
         data = {'name': 'new_redis_client_name'}
         assert data['name'] != server.name
@@ -135,7 +135,7 @@ class TestServerDetailView(TokenHeaderMixin):
         assert resp.status_code == 200
 
     def test_update_server_fail(self, server, client, admin):
-        '''测试更新某个 Redis 服务器失败'''
+        """测试更新某个 Redis 服务器失败"""
         assert Server.query.count() == 1
         second_server = Server(name='redis_test_2', description='test',
                 host='127.0.0.1')
@@ -151,7 +151,7 @@ class TestServerDetailView(TokenHeaderMixin):
         assert resp.json == errors
 
     def test_delete_server_success(self, server, client, admin):
-        '''测试删除某个服务器成功'''
+        """测试删除某个服务器成功"""
         assert Server.query.count() == 1
         resp = client.delete(url_for(self.endpoint, object_id=server.id),   
                 headers=self.token_header(admin))
@@ -159,7 +159,7 @@ class TestServerDetailView(TokenHeaderMixin):
         assert Server.query.count() == 0
 
     def test_delete_server_fail(self, client, admin):
-        '''测试删除某个不存在的服务器失败'''
+        """测试删除某个不存在的服务器失败"""
         not_exist_id = 123
         assert Server.query.get(not_exist_id) is None
         resp = client.delete(url_for(self.endpoint, object_id=not_exist_id),
@@ -170,13 +170,13 @@ class TestServerDetailView(TokenHeaderMixin):
 
 
 class TestServerMetricsView(TokenHeaderMixin):
-    '''测试获取 Redis 监控信息的 API
-    '''
+    """测试获取 Redis 监控信息的 API
+    """
 
     endpoint = 'api.server_metrics'
 
     def test_get_metrics_success(self, server, client, admin):
-        '''测试成功获取某个 Redis 服务器的监控信息'''
+        """测试成功获取某个 Redis 服务器的监控信息"""
         resp = client.get(url_for(self.endpoint, object_id=server.id),
                 headers=self.token_header(admin))
         assert resp.status_code == 200
@@ -187,7 +187,7 @@ class TestServerMetricsView(TokenHeaderMixin):
         assert 'used_memory' in metrics
 
     def test_get_metrics_fail(self, server, client, admin):
-        '''测试获取某个 Redis 服务器的监控信息失败'''
+        """测试获取某个 Redis 服务器的监控信息失败"""
         not_exist_id = 123
         assert Server.query.get(not_exist_id) is None
         resp = client.get(url_for(self.endpoint, object_id=not_exist_id),

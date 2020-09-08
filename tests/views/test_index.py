@@ -1,12 +1,12 @@
-'''测试首页 API
-'''
+"""测试首页 API
+"""
 
 from flask import url_for
 
 
 class TestIndex:
-    '''测试首页 API
-    '''
+    """测试首页 API
+    """
 
     endpoint = 'api.index'
 
