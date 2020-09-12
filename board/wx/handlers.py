@@ -56,7 +56,7 @@ class SubscribeEventHandler(BaseHandler):
         # 获取微信用户信息
         result = self.wx_client.user.get(message.source)
         # 返回给微信公众号 BaseReply 类的实例
-        return create_reply('欢迎关注 Redis Board 公众号，小包子🐶', message)
+        return create_reply('欢迎关注 Redis Board 公众号。', message)
 
 
 class IPLocationHandler(BaseHandler):
